@@ -4,16 +4,13 @@ const users = require('../controlleurs/users')
 
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
 
-router.post('/users', users.treatForm, function (req, res, next) {
-  res.send('ok')
-})
+router.post('/', users.treatForm )
 
-router.get('/users', function (req, res, next) {
+
+router.get('/', function (req, res, next) {
   res.send('merci')
+  console.log("coucou c'est nous")
 })
 
 module.exports = router;

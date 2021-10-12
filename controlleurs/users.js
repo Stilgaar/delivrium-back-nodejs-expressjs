@@ -5,20 +5,21 @@ const users = {
     treatForm(req, res, next) {
 
         let { pseudo, email, password } = req.body
-
-        if ( !pseudo | !email | !password ) {
-            return res.sendStatus(400) }
+            console.log(req.body)
+        if (!pseudo | !email | !password) {
+            return res.sendStatus(400)
+        }
 
         UserModel.create({
             pseudo,
             email,
             password
-        }).then(() => console.log("Fiche Créée")
+        }).then((createdUser) => {
+            console.log(createdUser)
+            res.send(createdUser)
+        }
         )
-
-       res.redirect('/')
-       
-},
+    },
 }
 
 module.exports = users;
