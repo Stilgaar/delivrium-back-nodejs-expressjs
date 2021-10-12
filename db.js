@@ -1,5 +1,4 @@
 // ICI faut rien mettre yo
-
 const mongoose = require('mongoose');
 const protocolMongo = "mongodb"
 const hostMongo = "localhost"
