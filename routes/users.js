@@ -16,4 +16,7 @@ router.get('/', function (req, res, next) {
 router.get('/login', users.treatLogin )
 {console.log("ca marche login")}
 
+router.get('/id', users.treatUserId )
+{console.log("ca marche pour Id")}
+
 module.exports = router;

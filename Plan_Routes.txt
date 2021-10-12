@@ -1,11 +1,11 @@
 --------ROUTES--------
 /users
 SignIn : POST /create (créer nouv compte) Récupérer les valeurs d'inputs du formulaire et les envoyer dans la BDD -> UserModel.create
-LogIn : GET /login (se connecter) Récupérer les valeurs de l'input-> UserModel.login
+LogIn : GET /login (se connecter) Récupérer les valeurs de l'input-> UserModel.find
 userInfo : GET /userInfo (Récup les infos d'un utilisateur) -> UserModel._id
 
 /posts
-NewCrit : POST /newpost (Créer un nouveau post) Récupérer id du posteur. POST en récupérant les contenus des inputs (title, critic) -> PostModel.newpost
+NewPost : POST /newpost (Créer un nouveau post) Récupérer id du posteur. POST en récupérant les contenus des inputs (title, critic) -> PostModel.newpost
 Homepage : GET /home (Afficher tout les posts) Récupérer les posts, les afficher sur la homepage -> PostModel.home
 
 
