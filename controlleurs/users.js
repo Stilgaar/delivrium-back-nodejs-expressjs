@@ -38,17 +38,24 @@ const users = {
     }
 
     UserModel.findOne({
-      pseudo: pseudo,
-      /* password: password ne pas le mettre car cripté plus tard */
+      pseudo: pseudo, 
     })
       .then((user) => {
         //Si l'entrée est valide fais ça
         res.send(user).status(200);
+        if (user === null) {
+            console.log("user doesn't exists");
+            return res.status(404).send("Le compte n'existe pas");
+        }
+        let isSamePassword = bcrypt.compareSync(password, user.password);
+
+        if (!isSamePassword) {
+            console.log("Mauvais mdp, fdp");
+            return res.status(404).send("Mauvais mot de passe");
+        }
+        res.status(200).send(user);
       })
-      .catch(() => {
-        //Si l'entrée est pas valide fais ça
-        res.send("Pas cool").status(500);
-      });
+      .catch((err).console.log(err).res.sendStatus(500));
   },
 
   treatUserId(req, res, next) {
