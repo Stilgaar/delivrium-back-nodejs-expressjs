@@ -13,7 +13,7 @@ router.get('/', function (req, res, next) {
   console.log("coucou c'est nous")
 })
 
-router.get('/login', users.treatLogin )
+router.post('/login', users.treatLogin )
 {console.log("ca marche login")}
 
 router.get('/id', users.treatUserId )
