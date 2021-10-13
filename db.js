@@ -8,5 +8,5 @@ const nomdeMongo = "user"
 const DB_URI = `${protocolMongo}://${hostMongo}:${portMongo}/${nomdeMongo}`
 
 mongoose.connect(DB_URI).then(() => {
-    console.log('*** CONNECTED TO ****')
+    console.log('*** CONNECTED TO ***')
 })
