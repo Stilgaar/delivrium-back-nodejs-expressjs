@@ -59,7 +59,7 @@ const users = {
         }, 'secret', { expiresIn: "24h" });
         console.log(token + " Voilà le log")
 
-        res.status(200).json({token: token, message:"connection réussie"});
+        res.status(200).json({token: token, message:"connection réussie", user});
       })
       
         
