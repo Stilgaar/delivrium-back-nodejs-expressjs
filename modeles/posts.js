@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const PostSchema = mongoose.Schema({
-    critic: String,
     title: String,
+    critic: String,
     comment: String,
-    like: Number
+    like: Number,
     
 })
 

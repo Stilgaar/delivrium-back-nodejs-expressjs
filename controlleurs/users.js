@@ -1,6 +1,7 @@
 const UserModel = require("../modeles/users");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const jwt = require("jsonwebtoken")
 
 const users = {
   treatForm(req, res, next) {
@@ -42,7 +43,7 @@ const users = {
     })
       .then((user) => {
         //Si l'entrée est valide fais ça
-        res.send(user).status(200);
+       
         if (user === null) {
             console.log("user doesn't exists");
             return res.status(404).send("Le compte n'existe pas");
@@ -53,15 +54,24 @@ const users = {
             console.log("Mauvais mdp, fdp");
             return res.status(404).send("Mauvais mot de passe");
         }
-        res.status(200).send(user);
+        const token = jwt.sign({
+        userId: user._id
+        }, 'secret', { expiresIn: "24h" });
+        console.log(token + " Voilà le log")
+
+        res.status(200).json({token: token, message:"connection réussie"});
       })
+      
+        
+        
+        
       
   },
 
   treatUserId(req, res, next) {
     let id = req.body._id;
     console.log(id + " bruuuuuuh!");
-  },
+  }
 };
 
 module.exports = users;
