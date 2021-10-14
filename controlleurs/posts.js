@@ -5,6 +5,7 @@ const posts = {
     newPost(req, res, next) {
 
         let {title, critic} = req.body
+        let pseudo = req.body.pseudo
 
         if (!title | !critic) {
             return res.sendStatus(400)
@@ -12,7 +13,8 @@ const posts = {
 
         PostModel.create({
             title: title,
-            critic: critic
+            critic: critic,
+            pseudo: pseudo
         }).then((createdPost) => {
             res.send(createdPost)
         })
