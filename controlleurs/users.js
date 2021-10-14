@@ -74,6 +74,14 @@ const users = {
     let id = req.body._id;
     console.log(id + " bruuuuuuh!");
   },
+
+  // controleur à utliliser (je suppose)
+  getInfos(req, res, next) {
+    console.log(req.body)
+    res.send(req.user);   
+  },
+
+  
 };
 
 module.exports = users;
