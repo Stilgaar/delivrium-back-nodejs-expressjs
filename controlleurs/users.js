@@ -90,10 +90,11 @@ const users = {
 
   checkToken(req, res, next) {
 
-    const authorization = req.headers.authorization
+    const auth = req.headers.authorization;
     console.log(req.headers.authorization)
+    console.log(req.headers)
 
-    if (!authorization) return res.sendStatus(418)
+    if (!auth) return res.sendStatus(403)
 
     const token = authorization.split(" ")[1]
 
@@ -104,6 +105,7 @@ const users = {
     // le decoded renvoi vers le token décodé.
     // dans le decoded on va chercher l'userId
     // puis dans l'user.id
+    // wesh
     jwt.verify(token, "secret", function (err, decoded) {
       if (err) return res.sendStatus(403)
       let id = decoded.userId

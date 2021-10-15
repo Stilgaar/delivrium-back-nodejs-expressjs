@@ -5,7 +5,7 @@ const hostMongo = "localhost"
 const portMongo = "27017"
 const nomdeMongo = "user"
 
-const DB_URI = `${protocolMongo}://${hostMongo}:${portMongo}/${nomdeMongo}`
+const DB_URI = process.env.SCALINGO_MONGO_URL || `${protocolMongo}://${hostMongo}:${portMongo}/${nomdeMongo}`
 
 mongoose.connect(DB_URI).then(() => {
     console.log('*** CONNECTED TO ***')
