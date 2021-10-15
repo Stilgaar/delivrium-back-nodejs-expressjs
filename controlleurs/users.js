@@ -104,12 +104,11 @@ const users = {
       let id = decoded.userId
       
       UserModel.findOne({
-        id,
+        _id: id
       }).then((dbRes) => {
         if (dbRes === null) return res.sendStatus(404)
-        console.log(dbRes)
         req.user = dbRes
-        next();
+        res.send(req.user);
       })
     })
   }
