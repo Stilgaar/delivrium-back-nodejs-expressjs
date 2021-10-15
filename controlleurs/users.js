@@ -90,17 +90,10 @@ const users = {
 
   checkToken(req, res, next) {
 
-    const auth = req.headers.authorization;
-    console.log(req.headers.authorization)
-    console.log(req.headers)
-
+    const auth = req.headers.authorization; 
     if (!auth) return res.sendStatus(403)
-
     const token = authorization.split(" ")[1]
-
     if (!token) return res.sendStatus(400)
-
-
     // le JWT verify sert à décoder le token
     // le decoded renvoi vers le token décodé.
     // dans le decoded on va chercher l'userId
