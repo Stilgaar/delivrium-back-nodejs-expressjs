@@ -90,11 +90,9 @@ const users = {
 
   checkToken(req, res, next) {
 
-    const auth = req.headers.authorization; 
-    console.log(auth)
-    if (!auth) return res.sendStatus(403)
+    const authorization = req.headers.authorization; 
+    if (!authorization) return res.sendStatus(403)
     const token = authorization.split(" ")[1]
-    console.log(token)
     if (!token) return res.sendStatus(400)
     // le JWT verify sert à décoder le token
     // le decoded renvoi vers le token décodé.
@@ -104,12 +102,12 @@ const users = {
     jwt.verify(token, "secret", function (err, decoded) {
       if (err) return res.sendStatus(403)
       let id = decoded.userId
-      console.log(id)
-
+      
       UserModel.findOne({
-        _id: id
+        id,
       }).then((dbRes) => {
         if (dbRes === null) return res.sendStatus(404)
+        console.log(dbRes)
         req.user = dbRes
         next();
       })

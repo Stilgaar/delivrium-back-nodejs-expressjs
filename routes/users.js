@@ -21,6 +21,6 @@ router.post('/login', users.treatLogin )
 router.get('/id', users.treatUserId )
 
 
-router.get('/info', users.checkToken, users.getInfos)
+router.get('/info', users.checkToken)
 
 module.exports = router;
