@@ -5,7 +5,7 @@ const PostSchema = mongoose.Schema({
     critic: String,
     comment: String,
     like: Number,
-    pseudo:String
+    currentUser:String
 })
 
 const PostModel = mongoose.model("posts", PostSchema)
