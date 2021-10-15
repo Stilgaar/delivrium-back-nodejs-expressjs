@@ -2,6 +2,7 @@ const UserModel = require("../modeles/users");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
 const users = {
   treatForm(req, res, next) {
@@ -51,7 +52,7 @@ const users = {
 
       if (!isSamePassword) {
         console.log("Mauvais mdp, fdp");
-        return res.status(404).send({error: "Mauvais mot de passe"});
+        return res.status(404).send({ error: "Mauvais mot de passe" });
       }
 
 
@@ -72,16 +73,50 @@ const users = {
 
   treatUserId(req, res, next) {
     let id = req.body._id;
-    console.log(id + " bruuuuuuh!");
   },
 
   // controleur à utliliser (je suppose)
   getInfos(req, res, next) {
     console.log(req.body)
-    res.send(req.user);   
+    res.send(req.user);
   },
 
-  
+
+  // le req.headers.authorization toppe les infos 'bearer token'
+  // le if !authorisation check si ça existe, si ça existe pas, forcément erreur
+  // après on split le string qu'on a reçu du req avec la fonction split
+  // le (" ") notionne un espace, le [1] forcement notionne le second objet de la string.
+  // se souvenir de l'exemple d'antonin avec les "S"
+
+  checkToken(req, res, next) {
+
+    const authorization = req.headers.authorization
+    console.log(req.headers.authorization)
+
+    if (!authorization) return res.sendStatus(418)
+
+    const token = authorization.split(" ")[1]
+
+    if (!token) return res.sendStatus(400)
+
+
+    // le JWT verify sert à décoder le token
+    // le decoded renvoi vers le token décodé.
+    // dans le decoded on va chercher l'userId
+    // puis dans l'user.id
+    jwt.verify(token, "secret", function (err, decoded) {
+      if (err) return res.sendStatus(403)
+      let id = decoded.userId
+
+      UserModel.findOne({
+        _id: id
+      }).then((dbRes) => {
+        if (dbRes === null) return res.sendStatus(404)
+        req.user = dbRes
+        next();
+      })
+    })
+  }
 };
 
 module.exports = users;

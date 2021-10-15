@@ -4,7 +4,6 @@ var path = require('path');
 var cors = require('cors')
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-console.log('tata')
 require('./db.js')
 
 // var indexRouter = require('./routes/index');

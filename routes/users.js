@@ -14,14 +14,13 @@ router.get('/', function (req, res, next) {
 })
 
 router.post('/login', users.treatLogin )
-{console.log("ca marche login")}
+
 
 // je l'ai rajouté sur cette route mais ya le
 // treatuserId qui doit gener
 router.get('/id', users.treatUserId )
-{console.log("ca marche pour Id")}
 
-router.get('/info', users.getInfos)
 
+router.get('/info', users.checkToken, users.getInfos)
 
 module.exports = router;
