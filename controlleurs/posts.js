@@ -4,7 +4,7 @@ const posts = {
 
     newPost(req, res, next) {
 
-        let {title, critic} = req.body
+        let { title, critic } = req.body
 
         if (!title | !critic) {
             return res.sendStatus(400)
@@ -21,7 +21,7 @@ const posts = {
 
     newComment(req, res, next) {
 
-        let {comment} = req.body // ou --->   let comment = req.body.comment
+        let { comment } = req.body // ou --->   let comment = req.body.comment
 
         if (!comment) {
             return res.sendStatus(400)
@@ -33,9 +33,14 @@ const posts = {
             res.send(createdComment)
         })
 
+    },
+
+    getCrits(req, res, next) {
+        PostModel.find({
+        }).then((critics) => {
+            res.send(critics)
+        })
     }
-
-
 }
 
 module.exports = posts;

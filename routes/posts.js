@@ -10,4 +10,7 @@ router.post('/', posts.newPost )
 router.post('/comment', posts.newComment )
 {console.log("Nouveau commentaire créé")}
 
+router.get('/critic', posts.getCrits) 
+{console.log('récuperation des posts dans la BD')}
+
 module.exports = router;
