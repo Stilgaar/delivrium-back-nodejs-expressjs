@@ -38,7 +38,6 @@ const posts = {
             return res.sendStatus(400)
         }
             PostModel.updateOne({
-                _id:postId,
             comment: comment,
             currentUser: currentUser,
         }).then((createdComment) => {

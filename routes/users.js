@@ -14,7 +14,6 @@ router.post('/login', users.treatLogin )
 
 // je l'ai rajouté sur cette route mais ya le
 // treatuserId qui doit gener
-router.get('/id', users.treatUserId )
 
 router.get('/info', users.checkToken)
 

@@ -112,9 +112,6 @@ const users = {
 
   // La j'ai deux fonctions, je ne sais même plus ce qu'elles font. Enfin si je vois ce qu'elle font, mais sont elles vraiment utilises ? 
   // ça me parait bien trop court pour que ce soit vrai
-  treatUserId(req, res, next) {
-    let id = req.body._id;
-  },
 
   // controleur à utliliser (je suppose)
   getInfos(req, res, next) {
