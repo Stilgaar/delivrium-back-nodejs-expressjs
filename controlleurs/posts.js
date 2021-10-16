@@ -8,7 +8,7 @@ const posts = {
 
     newPost(req, res, next) {
 
-        let { title, critic, currentUser } = req.body // ici le currentUser est récupéré via notre modèle users.js, récupéré dans le front quand on clique sur la page 
+        let { title, critic, currentUser, currentPost } = req.body // ici le currentUser est récupéré via notre modèle users.js, récupéré dans le front quand on clique sur la page 
         // ça nous permet de savoir qui à écris quoi. Du coup par contre nous la sauvagardons dans l'autre collection. Franchement jusque là, c'est ce qu'on a trouvé de plus simple
         // c'est d'ailleurs pour ça que nous avons décodé le token dans users.hs =)
 
@@ -20,25 +20,27 @@ const posts = {
             title: title,
             critic: critic,
             currentUser: currentUser,
+            currentPost: currentPost
         }).then((createdPost) => {
             res.send(createdPost)
         })
 
     },
 
- // la même fonction pour les commentaires. Nous ne l'avons pas encore fini. 
- // l'idéal c'est également d'avoir le currentUser pour pouvoir les render plus facilement par la suite
+    // la même fonction pour les commentaires. Nous ne l'avons pas encore fini. 
+    // l'idéal c'est également d'avoir le currentUser pour pouvoir les render plus facilement par la suite
 
     newComment(req, res, next) {
 
-        let { comment } = req.body // ou --->   let comment = req.body.comment
+        let { comment, currentUser } = req.body // ou --->   let comment = req.body.comment
 
         if (!comment) {
             return res.sendStatus(400)
         }
-
-        PostModel.create({
-            comment: comment
+            PostModel.updateOne({
+                _id:postId,
+            comment: comment,
+            currentUser: currentUser,
         }).then((createdComment) => {
             res.send(createdComment)
         })
@@ -52,7 +54,17 @@ const posts = {
         }).then((critics) => {
             res.send(critics)
         })
+    },
+
+    getCritID(req, res, next)  {
+        PostModel.findOne({
+            _id
+        }).then((resId) => {
+            res.send(resId)
+        })
     }
-}
+};
+
+
 
 module.exports = posts;

@@ -87,8 +87,7 @@ const users = {
 
       // si le mdp est pas le bon, bha 404 ma gueule
       if (!isSamePassword) {
-        console.log("Mauvais mdp, fdp");
-        return res.status(404).send({ error: "Mauvais mot de passe" });
+        return res.sendStatus(404)
       }
 
       // après pendant le login, bha il crée un token avec JWT (c'est le truc qu'on a importé plus haut)

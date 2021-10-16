@@ -15,9 +15,10 @@ const mongoose = require('mongoose');
 const PostSchema = mongoose.Schema({
     title: String,
     critic: String,
-    comment: String,
+    comment:String,
     like: Number,
-    currentUser:String
+    currentUser:String,
+    currentPost:String
 })
 
 const PostModel = mongoose.model("posts", PostSchema)

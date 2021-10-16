@@ -10,4 +10,6 @@ router.post('/comment', posts.newComment )
 
 router.get('/critic', posts.getCrits) 
 
+router.get('/criticId', posts.getCritID)
+
 module.exports = router;
