@@ -10,14 +10,18 @@ const comment = {
         CommentModel.create({
             currentPost,
             currentUser,
-            comment,
+            comment
         }).then((createdCom) => {
             res.send(createdCom)
         })
     },
 
     getCom(req, res, next) {
+
+        let {currentPost} = req.body
+        
         CommentModel.find({
+            currentPost,
         }).then((coms) => {
             res.send(coms)
         })

@@ -6,7 +6,7 @@ const comment = require('../controlleurs/comment')
 
 router.post('/', comment.newCom)
 
-router.get('/get', comment.getCom)
+router.post('/get', comment.getCom)
 
 module.exports = router;
   
