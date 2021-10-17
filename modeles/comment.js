@@ -4,7 +4,7 @@ const CommentSchema = mongoose.Schema({
    comment:String,
    like:Number,
    currentUser:String,
-   currentPost:Number
+   currentPost:String
 })
 
 const CommentModel = mongoose.model("comment", CommentSchema)
