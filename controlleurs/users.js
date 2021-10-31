@@ -7,8 +7,6 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 // jwt est l'instance des tokens. Il faut également l'installer, il faut également l'invoquer
 const jwt = require("jsonwebtoken");
-const { deleteOne } = require("../modeles/users");
-
 
 // la const USERS est suivie de plusieurs fonctions. Nous les appelleront dans les différentes routes en tappant users.nomDeLaFonction
 
