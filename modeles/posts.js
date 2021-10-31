@@ -16,9 +16,13 @@ const PostSchema = mongoose.Schema({
     title: String,
     critic: String,
     currentUser:String,
-    currentPost:String
+    auteur: String,
+    livre: String,
+    resume:String, 
+    thumbnail:String,
+    adminTitle: String,
+    adminPost: String
 })
-
 const PostModel = mongoose.model("posts", PostSchema)
 
 module.exports = PostModel;

@@ -7,13 +7,14 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 // jwt est l'instance des tokens. Il faut également l'installer, il faut également l'invoquer
 const jwt = require("jsonwebtoken");
+const { deleteOne } = require("../modeles/users");
 
 
 // la const USERS est suivie de plusieurs fonctions. Nous les appelleront dans les différentes routes en tappant users.nomDeLaFonction
 
 const users = {
 
- // le treatForm est la fonction qui va nous checker ce qui se pases quand on crée un compte
+  // le treatForm est la fonction qui va nous checker ce qui se pases quand on crée un compte
 
   treatForm(req, res, next) {
 
@@ -25,14 +26,14 @@ const users = {
     let { pseudo, email, password, verifPassword } = req.body;
 
     if (!pseudo || !email || !password || !verifPassword) { // elle check si les champs sont remplis
-      return res.sendStatus(400); // si c'est pas le cas, erreur 400 
+      return res.sendStatus(401); // si c'est pas le cas, erreur 400 
       // notez qu'il y aurait possibilité de prévenir l'utilisateur de ça avec un if(res.status === 400){alert("attention faut remplir tous les champs")}
     }
 
     if (password !== verifPassword) { // on verifie également que les mots de passe correspondent. Attention on fait ça dans le back AVANT
       // de le hasher, sinon ça peut ralentir pas mal les serveurs pour rien
-       return res.sendStatus(400).send("Les mots de passe de correspondent pas"); // comme pour le if d'au dessus on pourrait prévenir l'user
-       // si ses MDP ne matchent pas (en changeant le sendStatus par un 401 par exemple ?)
+      return res.sendStatus(400).send("Les mots de passe de correspondent pas"); // comme pour le if d'au dessus on pourrait prévenir l'user
+      // si ses MDP ne matchent pas (en changeant le sendStatus par un 401 par exemple ?)
     }
 
     // après on check si l'email n'est pas déjà dans la BDD, pour pas que les utilisateur puissent se crée plusieurs comptes avec le même email
@@ -52,12 +53,13 @@ const users = {
           pseudo,
           email,
           password: hashedPassword,
+          admin: false
         }).then((createdUser) => {
           console.log(createdUser);
           return res.status(200).send(createdUser);
         });
       } // si le if ne marche pas là haut, c'est ici qu'il retombe, en erreur 400
-      return res.status(400).send("Email déjà existant");
+      return res.sendStatus(402);
     });
   },
 
@@ -66,7 +68,8 @@ const users = {
     let { pseudo, password } = req.body;
 
     if (!pseudo || !password) {
-      return res.sendStatus(400); // ici encore un fois on check s'il y a un mdp ou un pseudo dans les cases.
+      return res.sendStatus(400)
+      // ici encore un fois on check s'il y a un mdp ou un pseudo dans les cases.
     } // notez encore une fois qu'on pourrait facilement faire une alerte coté front si ce n'est pas le cas
 
     // la pour la fonction mangoose, on ne crée plus, on findOne, effectivement vu que nous utilisions des pseudo uniques sur le site
@@ -78,8 +81,7 @@ const users = {
       //Si l'entrée est valide fais ça
 
       if (user === null) {
-        console.log("user doesn't exists");
-        return res.status(404).send("Le compte n'existe pas");
+        return res.sendStatus(402)
       } // si ça existe pas il envoi des erreures au front. ici on fait du 404 parce que c'est la faute de l'user
       let isSamePassword = bcrypt.compareSync(password, user.password);
       // après on check, encore une fois avec bycrypt que le password est le même que celui que l'utilisateur à rentré
@@ -99,10 +101,7 @@ const users = {
         "secret", // ça c'est notre clefs pourrie de JWT, l'idéal c'est d'en faire une variable, un peu plus costeau pour ensuite la mettre dans un .env
         { expiresIn: "24h" } // le token dure que 24h. Je ne sais pas trop comment ça marche vu que c'est une string, mais ça doit être un truc
       ); // de jwt. Parfois l'ignorance, c'est pas mal
-      console.log(token + " Voilà le log");
-
-      res
-        .status(200) // si tout ça fonctionne on envoi la répones au front, et on est connecté. C'est beau la technologie. 
+      res.status(200) // si tout ça fonctionne on envoi la répones au front, et on est connecté. C'est beau la technologie. 
         // d'ailleurs ce status 200 c'est celui que je récupéré dans login.js dans le front pour faire mon 
         // if(res.status === 200) {setIsLog(true)}. La nature est quand même bien faite !
         .json({ token: token, message: "connection réussie", user });
@@ -114,9 +113,12 @@ const users = {
   // ça me parait bien trop court pour que ce soit vrai
 
   // controleur à utliliser (je suppose)
-  getInfos(req, res, next) {
-    console.log(req.body)
-    res.send(req.user);
+  getUsers(req, res, next) {
+
+    UserModel.find({
+    }).then((allUsers) => {
+      res.send(allUsers)
+    })
   },
 
   // la fonction BALAIZE qui check le token en place ... 
@@ -128,13 +130,13 @@ const users = {
     const authorization = req.headers.authorization; // attention cette authorisation faut l'envoyer du FRONT ! sinon il la récup pas dans le body
     // le req.headers.authorization toppe les infos 'bearer token'
     if (!authorization) return res.sendStatus(403) // ouais je m'en suis rendu compte à mes dépends ... ça m'a pris presque un jour ... 
-      // le if !authorisation check si ça existe, si ça existe pas, forcément erreur
-    const token = authorization.split(" ")[1] 
+    // le if !authorisation check si ça existe, si ça existe pas, forcément erreur
+    const token = authorization.split(" ")[1]
     // après on split le string qu'on a reçu du req avec la fonction split
     // le (" ") notionne un espace, le [1] forcement notionne le second objet de la string.
     // se souvenir de l'exemple d'antonin avec les "S" (désolé si tu lis ça et que t'étais pas là)
     if (!token) return res.sendStatus(400)
-  
+
     jwt.verify(token, "secret", function (err, decoded) { // le JWT verify sert à décoder le token //  le decoded renvoi vers le token décodé.
       if (err) return res.sendStatus(403)
       let id = decoded.userId // dans le decoded on va chercher l'userId
@@ -148,7 +150,38 @@ const users = {
         res.send(req.user); // la réponse est ensuite envoyé dans le front ou on peut récupérer les informations de l'user grâce à son token
       }) // j'avoue celle là, même en la relisant, je la trouve BALAIZE
     })
+  },
+
+  userBan(req, res, next) {
+
+    let { email } = req.body;
+    let password = "TEUBBITETEUBBITE" // ouais je vais faire une fonction avec un chiffre aléatoire la dedans, un jour
+
+
+    // le email: email c'est le filtre : ça peut être l'ID comme n'importe quoi d'autre, ici l'email que je récupére dans le body
+    // le $set est un "élément atomique", c'est la première fois qu'on tombe dessus et apparement il y en a plusieurs. Il se mets devant le ou les élements que tu veux modifier je suppose que tu peux écirre {$set: {password: password}, {age:25}}
+    // le new: true c'est pour que ce soit affiché directement dans notre console
+    // cette fonction demande un callback, ici le (err, ban) 
+
+    UserModel.findOneAndUpdate({ email: email }, { $set: { password: password } }, { new: true }, (error, ban) => {
+      if (error) { res.send(error)}
+      else { res.send(ban) 
+        console.log(ban) }
+
+    })
+  },
+
+  admin(req, res, next) {
+
+    let { email } = req.body;
+    let admin = true;
+
+    UserModel.findOneAndUpdate({ email: email }, { $set: {admin: admin} }, { new: true }, (err, admin) => {
+      if (err) { res.send(err) }
+      else { res.send(admin) 
+      console.log(admin)}
+    })
   }
-};
+}
 
 module.exports = users;

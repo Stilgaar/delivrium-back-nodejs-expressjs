@@ -10,4 +10,6 @@ router.get('/critic', posts.getCrits)
 
 router.get('/criticId', posts.getCritID)
 
+router.post('/admin', posts.newAdmin)
+
 module.exports = router;

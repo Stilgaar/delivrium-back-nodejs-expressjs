@@ -8,11 +8,11 @@ const posts = {
 
     newPost(req, res, next) {
 
-        let { title, critic, currentUser, currentPost } = req.body // ici le currentUser est récupéré via notre modèle users.js, récupéré dans le front quand on clique sur la page 
+        let { title, critic, currentUser, auteur, livre, resume, thumbnail } = req.body // ici le currentUser est récupéré via notre modèle users.js, récupéré dans le front quand on clique sur la page 
         // ça nous permet de savoir qui à écris quoi. Du coup par contre nous la sauvagardons dans l'autre collection. Franchement jusque là, c'est ce qu'on a trouvé de plus simple
         // c'est d'ailleurs pour ça que nous avons décodé le token dans users.hs =)
 
-        if (!title | !critic) { // pas besoin de checker le currentUser, nous sommes sur une route privée, l'user à forcément un token de connection
+        if (!title || !critic) { // pas besoin de checker le currentUser, nous sommes sur une route privée, l'user à forcément un token de connection
             return res.sendStatus(400)
         }
 
@@ -20,15 +20,32 @@ const posts = {
             title: title,
             critic: critic,
             currentUser: currentUser,
-            currentPost: currentPost
+            auteur: auteur,
+            livre: livre,
+            resume: resume,
+            thumbnail, thumbnail
         }).then((createdPost) => {
             res.send(createdPost)
         })
-
     },
 
     // la même fonction pour les commentaires. Nous ne l'avons pas encore fini. 
     // l'idéal c'est également d'avoir le currentUser pour pouvoir les render plus facilement par la suite
+
+    newAdmin(req, res, next) {
+
+        let { adminPost, adminTitle, currentUser } = req.body
+        if (!adminPost | !adminTitle) {
+            return res.sendStatus(400)
+        }
+        PostModel.create({               
+            currentUser: currentUser,
+            adminTitle: adminTitle,
+            adminPost: adminPost
+        }).then((createdPost) => {
+            res.send(createdPost)
+        })
+     },
 
     newComment(req, res, next) {
 
@@ -37,7 +54,7 @@ const posts = {
         if (!comment) {
             return res.sendStatus(400)
         }
-            PostModel.updateOne({
+        PostModel.updateOne({
             comment: comment,
             currentUser: currentUser,
         }).then((createdComment) => {
@@ -55,7 +72,7 @@ const posts = {
         })
     },
 
-    getCritID(req, res, next)  {
+    getCritID(req, res, next) {
         PostModel.findOne({
             _id
         }).then((resId) => {

@@ -17,4 +17,10 @@ router.post('/login', users.treatLogin )
 
 router.get('/info', users.checkToken)
 
+router.get('/all', users.getUsers)
+
+router.patch('/softban', users.userBan)
+
+router.patch('/admin', users.admin)
+
 module.exports = router;
