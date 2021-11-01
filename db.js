@@ -12,7 +12,7 @@ const nomdeMongo = "user"
 // le process.env.SCALINGO est le serveur distant sur lequel nous avons installé notre BD/back
 // il est mis dans un process.env c'est un fichier caché que 
 
-const DB_URI = process.env.SCALINGO_MONGO_URL || `${protocolMongo}://${hostMongo}:${portMongo}/${nomdeMongo}`
+const DB_URI = process.env.DB_JEREM || `${protocolMongo}://${hostMongo}:${portMongo}/${nomdeMongo}`
 
 mongoose.connect(DB_URI).then(() => {
     console.log('*** CONNECTED TO ***')
