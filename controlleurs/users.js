@@ -23,7 +23,7 @@ const users = {
 
     let { pseudo, email, password, verifPassword } = req.body;
 
-    if (!pseudo || !email || !password || !verifPassword) { // elle check si les champs sont remplis
+    if (!pseudo || !email || !password || !verifPassword ) { // elle check si les champs sont remplis
       return res.sendStatus(401); // si c'est pas le cas, erreur 400 
       // notez qu'il y aurait possibilité de prévenir l'utilisateur de ça avec un if(res.status === 400){alert("attention faut remplir tous les champs")}
     }
@@ -181,5 +181,6 @@ const users = {
     })
   }
 }
+
 
 module.exports = users;
